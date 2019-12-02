@@ -1,7 +1,8 @@
-package com.foxhis.sendip.sendip;
+package com.foxhis.sendip.sendip.websocket;
 
 public class WebSocketUtil {
-    public static String parseURL(String address){
+
+    public static String parseURL(String address,String tenantid,String hotelid){
         String protocol = "https".equals(address.split(":")[0])?"wss://":"ws://";
         String addr = address.split(":")[1].split("//")[1];
         String port ;
@@ -10,7 +11,7 @@ public class WebSocketUtil {
         }catch (Exception e) {
             port = "";
         }
-        String uri = protocol+addr+(port.equals("")?"":":"+port)+"/websocket/1/1";
+        String uri = protocol+addr+(port.equals("")?"":":"+port)+"/websocket/"+tenantid+"/"+hotelid;
         return uri;
     }
 }

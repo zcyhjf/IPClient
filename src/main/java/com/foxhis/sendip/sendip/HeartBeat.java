@@ -1,10 +1,7 @@
 package com.foxhis.sendip.sendip;
 
 
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.net.Socket;
+import com.foxhis.sendip.sendip.websocket.WebSocketClientTest;
 
 public class HeartBeat extends Thread {
 
@@ -22,7 +19,7 @@ public class HeartBeat extends Thread {
     public void run(){
         try {
             while (true){
-                Thread.sleep(3000);
+                Thread.sleep(5000);
                 webSocket.send("alive");
                 System.out.println("客户端发送心跳");
             }

@@ -1,4 +1,4 @@
-package com.foxhis.sendip.sendip;
+package com.foxhis.sendip.sendip.websocket;
 
 import org.springframework.stereotype.Component;
 

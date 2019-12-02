@@ -1,10 +1,9 @@
-package com.foxhis.sendip.sendip;
+package com.foxhis.sendip.sendip.websocket;
 
 import org.apache.log4j.Logger;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
 
-import javax.websocket.Session;
 import java.net.URI;
 
 public class WebSocketClientTest extends WebSocketClient {

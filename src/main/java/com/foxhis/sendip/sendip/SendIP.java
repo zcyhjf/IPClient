@@ -1,20 +1,13 @@
 package com.foxhis.sendip.sendip;
 
-import com.alibaba.fastjson.JSONObject;
-import org.apache.http.config.Lookup;
-import org.apache.http.conn.socket.ConnectionSocketFactory;
+import com.foxhis.sendip.sendip.websocket.WebSocketClientTest;
+import com.foxhis.sendip.sendip.websocket.WebSocketUtil;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
-import java.io.DataOutputStream;
-import java.io.EOFException;
-import java.io.OutputStream;
 import java.net.*;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 @Component
 public class SendIP implements ApplicationRunner {
@@ -39,7 +32,7 @@ public class SendIP implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments applicationArguments) throws Exception {
-        WebSocketClientTest webSocket = new WebSocketClientTest(URI.create(WebSocketUtil.parseURL(address)));
+        WebSocketClientTest webSocket = new WebSocketClientTest(URI.create(WebSocketUtil.parseURL(address,tenantid,hotelid)));
         webSocket.connect();
         new IPChange(tenantid,hotelid,webSocket,localport).start();
         new HeartBeat(webSocket).start();
