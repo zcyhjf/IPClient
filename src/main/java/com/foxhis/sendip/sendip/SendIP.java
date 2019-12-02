@@ -39,7 +39,7 @@ public class SendIP implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments applicationArguments) throws Exception {
-        WebSocketClientTest webSocket = new WebSocketClientTest(URI.create("ws://192.168.8.248:10039/websocket/3/1"));
+        WebSocketClientTest webSocket = new WebSocketClientTest(URI.create(WebSocketUtil.parseURL(address)));
         webSocket.connect();
         new IPChange(tenantid,hotelid,webSocket,localport).start();
         new HeartBeat(webSocket).start();

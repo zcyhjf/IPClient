@@ -33,23 +33,22 @@ public class IPChange extends Thread {
         String oriIp = "";
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         try {
-            //this.socket = new Socket(ip,port);
             long lastSendTime = System.currentTimeMillis();
             while(true){
-                Thread.sleep(10000);
+                Thread.sleep(20000);
                 long currentTime = System.currentTimeMillis();
-                InetAddress host = InetAddress.getLocalHost();
-                String localIp = host.getHostAddress();
-                JSONObject IPJson = new JSONObject();
-                IPJson.put("hotelid",hotelid);
-                IPJson.put("tenantid",tenantid);
-                IPJson.put("Date",sdf.format(new Date()));
-                IPJson.put("IP",localIp+":"+localport);
-                String IPString = IPJson.toJSONString();
-                if (!localIp.equals(oriIp) || currentTime-lastSendTime > MAX_SEND_INTERVAL) {
+                //获取公网ip
+                String remoteIp = GetRemoteIp.getV4Ip();
+                if (!remoteIp.equals(oriIp) || currentTime-lastSendTime > MAX_SEND_INTERVAL) {
+                    JSONObject IPJson = new JSONObject();
+                    IPJson.put("hotelid",hotelid);
+                    IPJson.put("tenantid",tenantid);
+                    IPJson.put("Date",sdf.format(new Date()));
+                    IPJson.put("IP",remoteIp+":"+localport);
+                    String IPString = IPJson.toJSONString();
                     webSocket.send(IPString);
-                    oriIp = localIp;
-                    System.out.println("发送成功" + localIp);
+                    oriIp = remoteIp;
+                    System.out.println("发送成功" + remoteIp);
                     lastSendTime = System.currentTimeMillis();
                 }
             }

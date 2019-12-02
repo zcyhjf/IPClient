@@ -21,15 +21,10 @@ public class HeartBeat extends Thread {
 
     public void run(){
         try {
-            //this.socket = new Socket(ip,port);
-            //DataOutputStream dataOutputStream = new DataOutputStream(socket.getOutputStream());
-            //dataOutputStream.write(0);
             while (true){
-                Thread.sleep(5000);
-                //dataOutputStream.writeUTF("alive");
+                Thread.sleep(3000);
                 webSocket.send("alive");
                 System.out.println("客户端发送心跳");
-                //dataOutputStream.flush();
             }
         }catch (Exception e) {
             e.printStackTrace();
