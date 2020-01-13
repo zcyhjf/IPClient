@@ -31,9 +31,19 @@ public class GetRemoteIp {
             try {
                 URL url = new URL(website.getName());
                 HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+                urlConnection.setRequestMethod("GET");
+                urlConnection.setRequestProperty("User-agent","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3970.5 Safari/537.36");
+                urlConnection.setConnectTimeout(5000);
+                urlConnection.setReadTimeout(5000);
                 in = new BufferedReader(new InputStreamReader(urlConnection.getInputStream(), "UTF-8"));
                 while ((read = in.readLine()) != null) {
                     inputLine.append(read + "\r\n");
+                }
+                Pattern p = Pattern.compile("(25[0-5]|2[0-4]\\d|[0-1]\\d{2}|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|[0-1]\\d{2}|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|[0-1]\\d{2}|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|[0-1]\\d{2}|[1-9]?\\d)");
+                Matcher m = p.matcher(inputLine.toString());
+                ip = m.find()?m.group():"";
+                if ("".equals(ip)){
+                    continue;
                 }
                 break;
             } catch (Exception e) {
@@ -47,11 +57,6 @@ public class GetRemoteIp {
                     }
                 }
             }
-        }
-       Pattern p = Pattern.compile("(25[0-5]|2[0-4]\\d|[0-1]\\d{2}|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|[0-1]\\d{2}|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|[0-1]\\d{2}|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|[0-1]\\d{2}|[1-9]?\\d)");
-        Matcher m = p.matcher(inputLine.toString());
-        if (m.find()) {
-            ip = m.group();
         }
         return ip;
     }

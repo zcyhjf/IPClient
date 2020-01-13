@@ -2,6 +2,7 @@ package com.foxhis.sendip.sendip;
 
 import com.foxhis.sendip.sendip.websocket.WebSocketClientTest;
 import com.foxhis.sendip.sendip.websocket.WebSocketUtil;
+import org.java_websocket.WebSocket;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
@@ -15,43 +16,34 @@ public class SendIP implements ApplicationRunner {
     @Value("${sendaddress}")
     String address;
 
-    @Value("${send.ip}")
-    String ip;
-
-    @Value("${send.port}")
-    Integer port;
-
     @Value("${hotelid}")
     String hotelid;
 
     @Value("${tenantid}")
     String tenantid;
 
-    @Value("${server.port}")
-    String localport;
+
+    private  Boolean isConnect = true;
+
+    private  Boolean isCreate = false;
 
     @Override
     public void run(ApplicationArguments applicationArguments) throws Exception {
         WebSocketClientTest webSocket = new WebSocketClientTest(URI.create(WebSocketUtil.parseURL(address,tenantid,hotelid)));
         webSocket.connect();
-        new IPChange(tenantid,hotelid,webSocket,localport).start();
-        new HeartBeat(webSocket).start();
-        while(true) {
-            if (webSocket.isClosed()) {
-                try{
-                    webSocket.reconnect();
-                    if (!webSocket.isClosed()){
-                        Thread.sleep(3000);
-                        new IPChange(tenantid,hotelid,webSocket,localport).start();
-                        new HeartBeat(webSocket).start();
-                    }
-                }catch (Exception e){
-                    e.printStackTrace();
-                    System.out.println("重连中");
-                }
+        while(true){
+            Thread.sleep(3000);
+            isConnect = webSocket.isOpen();
+            if (isConnect && !isCreate){
+                new IPChange(tenantid,hotelid,webSocket).start();
+                new HeartBeat(webSocket).start();
+                isCreate = true;
+            }else if (!isConnect){
+                webSocket.reconnect();
+                Thread.sleep(2000);
+                isConnect = !webSocket.isClosed();
+                isCreate = false;
             }
-            Thread.sleep(2000);
         }
-        //new IsAlive(socket).start();
     }
 }
